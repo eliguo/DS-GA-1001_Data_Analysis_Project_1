@@ -16,10 +16,10 @@ lion_k = mr_set.loc[:, ["The Lion King (1994)", "Are you an only child? (1: Yes;
 # Split the data into two categories and only keep the series of the ratings, and also dropna.
 lion_k_OC = lion_k.query("`Are you an only child? (1: Yes; 0: No; -1: Did not respond)` == 1").dropna()["The Lion King (1994)"]
 lion_k_HS = lion_k.query("`Are you an only child? (1: Yes; 0: No; -1: Did not respond)` == 0").dropna()["The Lion King (1994)"]
-# Lastly do the ONE-sided independent samples t-test.
-stat, pval = stats.ttest_ind(lion_k_OC, lion_k_HS, alternative="greater")
+# Lastly do the ONE-sided Mann Whitney U test.
+stat, pval = stats.mannwhitneyu(lion_k_OC, lion_k_HS, alternative="greater")
 whether_significant = 'significant!' if pval < signi_level else 'not significant!'
-print(f"The p-value for the t-test is {pval}, which means that the result is {whether_significant}")
+print(f"The p-value for the Mann Whitney U test is {pval}, which means that the result is {whether_significant}")
 if pval >= signi_level:
     print("Conclusion: people who are only children do not enjoy 'The Lion King (1994)' more than people with siblings")
 else:
@@ -37,7 +37,7 @@ count_sig, count_not_sig = 0, 0
 for each_movie in movie_names:
     movie_OC = data_child_OC[each_movie].dropna()
     movie_HS = data_child_HS[each_movie].dropna()
-    each_stat, each_pval = stats.ttest_ind(movie_OC, movie_HS)
+    each_stat, each_pval = stats.mannwhitneyu(movie_OC, movie_HS)
     if each_pval < signi_level:
         count_sig += 1
     else:
@@ -55,10 +55,10 @@ wolf_ws = mr_set.loc[:, ["The Wolf of Wall Street (2013)", "Movies are best enjo
 # Split the data into two categories and only keep the series of the ratings, and also dropna.
 wolf_ws_AL = wolf_ws.query("`Movies are best enjoyed alone (1: Yes; 0: No; -1: Did not respond)` == 1").dropna()["The Wolf of Wall Street (2013)"]
 wolf_ws_SO = wolf_ws.query("`Movies are best enjoyed alone (1: Yes; 0: No; -1: Did not respond)` == 0").dropna()["The Wolf of Wall Street (2013)"]
-# Lastly do the ONE-sided independent samples t-test.
-stat, pval = stats.ttest_ind(wolf_ws_SO, wolf_ws_AL, alternative="greater")
+# Lastly do the ONE-sided Mann Whitney U test.
+stat, pval = stats.mannwhitneyu(wolf_ws_SO, wolf_ws_AL, alternative="greater")
 whether_significant = 'significant!' if pval < signi_level else 'not significant!'
-print(f"The p-value for the t-test is {pval}, which means that the result is {whether_significant}")
+print(f"The p-value for the Mann Whitney U test is {pval}, which means that the result is {whether_significant}")
 if pval >= signi_level:
     print("conclusion: people who like to watch movies socially do not enjoy 'The Wolf of Wall Street (2013)' \
 more than those who prefer to watch them alone.")
@@ -73,13 +73,13 @@ print("Question 8: What proportion of movies exhibit such a â€œsocial watchingâ€
 data_watch_AL = mr_set.query("`Movies are best enjoyed alone (1: Yes; 0: No; -1: Did not respond)` == 1")
 data_watch_SO = mr_set.query("`Movies are best enjoyed alone (1: Yes; 0: No; -1: Did not respond)` == 0")
 movie_names = list(mr_set.columns[:400])
-# Go over all movies and do an independent samples t-test for each of them.
+# Go over all movies and do a Mann Whitney U test for each of them.
 signi_level = 0.005
 count_sig, count_not_sig = 0, 0
 for each_movie in movie_names:
     movie_watch_AL = data_watch_AL[each_movie].dropna()
     movie_watch_SO = data_watch_SO[each_movie].dropna()
-    each_stat, each_pval = stats.ttest_ind(movie_watch_AL, movie_watch_SO)
+    each_stat, each_pval = stats.mannwhitneyu(movie_watch_AL, movie_watch_SO)
     if each_pval < signi_level:
         count_sig += 1
     else:
